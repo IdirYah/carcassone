@@ -24,13 +24,16 @@ typedef struct tuile{
 }tuile;
 //----------------------------
 typedef struct pileTuiles{
-    tuile pile[NB_TUILES];
+    tuile* pile[NB_TUILES];
     int indiceCourant;
 }pileTuiles;
 //----------------------------
 typedef struct grille{
-    tuile tabTuiles[MAX][MAX];
+    tuile* tabTuiles[MAX][MAX];
     int ligneDebut,colonneDebut;
 }grille;
 //----------------------------
+tuile* creerTuile(tuileTypes,tuileTypes,tuileTypes,tuileTypes,tuileTypes);
+void initialiserPile(char*,pileTuiles*);
+//-----------------------------
 #endif 
