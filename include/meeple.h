@@ -13,7 +13,6 @@ typedef enum positions{
 //----------------------
 typedef struct meeple{
     positions tuilePosition;
-    tuile *tuiles;
     joueur *player;
 }meeple;
 //----------------------

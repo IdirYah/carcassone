@@ -15,5 +15,4 @@ typedef struct joueur{
     unsigned int nbMeeples;
 }joueur;
 //-------------------------
-
 #endif 
