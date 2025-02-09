@@ -1,6 +1,8 @@
 #ifndef _MEEPLE_H
 #define _MEEPLE_H
-#include "tuile.h"
+//---------------------
+struct joueur;
+typedef struct joueur joueur;
 //----------------------
 typedef enum couleurs{
     JAUNE,
@@ -28,5 +30,9 @@ typedef struct listMeeples{
     meeple *m;
     struct listMeeples *suivant;
 }listMeeples;
+//-----------------------
+meeple* creerMeeple(couleurs);
+void empilerMeeple(meeple*,joueur*);
+meeple* depilerMeeple(joueur*);
 //-----------------------
 #endif 

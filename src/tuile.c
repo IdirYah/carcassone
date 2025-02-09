@@ -109,13 +109,11 @@ tuile *rotationTuile(tuile *t,int angle){
         tmp->ouest = t->est;
         return tmp;
     }
-    if(angle == 270){
-        tmp->nord = t->ouest;
-        tmp->sud = t->est;
-        tmp->est = t->sud;
-        tmp->ouest = t->nord;
-        return tmp;
-    }
+    tmp->nord = t->ouest;
+    tmp->sud = t->est;
+    tmp->est = t->sud;
+    tmp->ouest = t->nord;
+    return tmp;
 }
 //------------------------------
 void poserTuile(grille *g,int ligne,int colonne,tuile *t){

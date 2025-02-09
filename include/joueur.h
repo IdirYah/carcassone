@@ -9,8 +9,11 @@ typedef struct joueur{
 }joueur;
 //-------------------------
 typedef struct tabJoueurs{
-    joueur *player;
+    joueur **player;
     unsigned int nbJoueurs;
 }tabJoueurs;
+//-------------------------
+joueur *creerJoueur(int);
+void creerJoueurs(tabJoueurs*,int);
 //-------------------------
 #endif 
