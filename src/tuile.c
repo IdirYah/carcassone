@@ -1,6 +1,7 @@
 #include "../include/tuile.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 //---------------------------------
 tuile *creerTuile(tuileTypes north,tuileTypes south,tuileTypes east,tuileTypes west,tuileTypes center){
     tuile *t = (tuile*)malloc(sizeof(tuile));
@@ -19,19 +20,64 @@ void libererTuile(tuile *t){
     free(t);
 }
 //------------------------------------
-/*void initialiserPile(char *fname,pileTuiles *p){
+tuileTypes convertirChaine(char *chaine){
+    if(!strcmp(chaine,"pre")){
+        return PRE;
+    }
+    if(!strcmp(chaine,"village")){
+        return VILLAGE;
+    }
+    if(!strcmp(chaine,"ville")){
+        return VILLE;
+    }
+    if(!strcmp(chaine,"blason")){
+        return BLASON;
+    }
+    if(!strcmp(chaine,"route")){
+        return ROUTE;
+    }
+    return ABBAYE;
+}
+//------------------------------------
+void initialiserPile(char *fname,pileTuiles *p){
     p->indiceCourant = 0;
-    FILE *f = fopen(fname,"r");
+    FILE *f = fopen(fname,"rb");
     if(f == NULL){
         perror("Error\n");
         return;
     }
-    char chaine1[10],chaine2[10],chaine3[10],chaine4[10],chaine5[10];
-    while(fscanf(f,"%99[^,]%99[^,]%99[^,]%99[^,]%99[^\n]",chaine1,chaine2,chaine3,chaine4,chaine5) == 5){
-        printf("%s,%s,%s,%s,%s\n",chaine1,chaine2,chaine3,chaine4,chaine5);
+    char chaine[15];
+    tuileTypes north,south,east,west,center;
+    char c;
+    int i = 0;
+    int j = 0;
+    int k = 1;
+    printf("\n");
+    while(fread(&c,sizeof(char),1,f) == 1){
+        if(c != '\n' && c != ','){
+            chaine[j] = c;
+            j++;
+        }else{
+            chaine[j] = '\0';
+            j = 0;
+            if(k%5 == 1){
+                north = convertirChaine(chaine);
+            }else if(k%5 == 2){
+                east = convertirChaine(chaine);
+            }else if(k%5 == 3){
+                south = convertirChaine(chaine);
+            }else if(k%5 == 4){
+                west = convertirChaine(chaine);
+            }else{
+                center = convertirChaine(chaine);
+                p->pile[i] = creerTuile(north,south,east,west,center);
+                i++;
+            }
+            k++;
+        }
     }
     fclose(f);
-}*/
+}
 //------------------------------------
 tuile* depilerTuile(pileTuiles *t){
     tuile *tmp = t->pile[t->indiceCourant];

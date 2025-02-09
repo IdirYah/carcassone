@@ -34,6 +34,8 @@ typedef struct grille{
 }grille;
 //----------------------------
 tuile* creerTuile(tuileTypes,tuileTypes,tuileTypes,tuileTypes,tuileTypes);
+void libererTuile(tuile *);
+tuileTypes convertirChaine(char*);
 void initialiserPile(char*,pileTuiles*);
 tuile *depilerTuile(pileTuiles*);
 int pileVide(pileTuiles);
