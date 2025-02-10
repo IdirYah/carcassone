@@ -22,15 +22,3 @@ void empilerMeeple(meeple *mp,joueur *p){
     p->teteListe = tmp;
 }
 //-------------------------
-meeple* depilerMeeple(joueur* p){
-    if(p->teteListe == NULL){
-        printf("Pile vide.\n");
-        return NULL;
-    }
-    listMeeples *tmp = p->teteListe;
-    meeple *l = tmp->m;
-    free(tmp);
-    p->teteListe = p->teteListe->suivant;
-    return l;
-}
-//-------------------------

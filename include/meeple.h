@@ -33,6 +33,5 @@ typedef struct listMeeples{
 //-----------------------
 meeple* creerMeeple(couleurs);
 void empilerMeeple(meeple*,joueur*);
-meeple* depilerMeeple(joueur*);
 //-----------------------
 #endif 

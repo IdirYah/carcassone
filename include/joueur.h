@@ -13,7 +13,8 @@ typedef struct tabJoueurs{
     unsigned int nbJoueurs;
 }tabJoueurs;
 //-------------------------
-joueur *creerJoueur(int);
+joueur *creerJoueur(int,couleurs);
 void creerJoueurs(tabJoueurs*,int);
+void poserMeeple(tabJoueurs*,int,positions);
 //-------------------------
 #endif 
