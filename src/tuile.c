@@ -10,8 +10,6 @@ tuile *creerTuile(tuileTypes north,tuileTypes south,tuileTypes east,tuileTypes w
     t->ouest = west;
     t->nord = north;
     t->sud = south;
-    t->x = -1;
-    t->y = -1;
     t->meeples = NULL;
     return t;
 }
@@ -52,7 +50,7 @@ void initialiserPile(char *fname,pileTuiles *p){
     int i = 0;
     int j = 0;
     int k = 1;
-    printf("\n");
+    printf("file opened.\n");
     while(fread(&c,sizeof(char),1,f) == 1){
         if(c != '\n' && c != ','){
             chaine[j] = c;
@@ -91,8 +89,6 @@ int pileVide(pileTuiles t){
 //------------------------------------
 tuile *rotationTuile(tuile *t,int angle){
     tuile *tmp = (tuile*)malloc(sizeof(tuile));
-    tmp->x = t->x;
-    tmp->y = t->y;
     tmp->centre = t->centre;
     tmp->meeples = t->meeples;
     if(angle == 90){

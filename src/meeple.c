@@ -7,6 +7,8 @@ meeple *creerMeeple(couleurs c){
     meeple *m = (meeple*)malloc(sizeof(meeple));
     m->couleur = c;
     m->tuilePosition = RIEN;
+    m->x =-1;
+    m->y = -1;
     return m;
 }
 //-------------------------

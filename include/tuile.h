@@ -19,7 +19,6 @@ typedef struct tuile{
     tuileTypes est;
     tuileTypes ouest;
     tuileTypes centre;
-    int x,y;
     meeple *meeples;
 }tuile;
 //----------------------------

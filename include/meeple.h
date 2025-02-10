@@ -24,6 +24,7 @@ typedef enum positions{
 typedef struct meeple{
     positions tuilePosition;
     couleurs couleur; 
+    int x,y;
 }meeple;
 //----------------------
 typedef struct listMeeples{
