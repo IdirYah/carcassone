@@ -3,7 +3,25 @@
 #include <stdlib.h>
 //-------------------------
 int isPositionTuileValide(grille* g,tuile *t,int dx,int dy){
-    
+    if(g->tabTuiles[dx][dy] != NULL){
+        return 0;
+    }
+    if(g->tabTuiles[dx-1][dy] == NULL && g->tabTuiles[dx+1][dy] == NULL && g->tabTuiles[dx][dy-1] == NULL && g->tabTuiles[dx][dy+1] == NULL){
+        return 0;
+    }
+    if(g->tabTuiles[dx-1][dy] != NULL && g->tabTuiles[dx-1][dy]->sud == t->nord){
+        return 1;
+    }
+    if(g->tabTuiles[dx+1][dy] != NULL && g->tabTuiles[dx+1][dy]->nord == t->sud){
+        return 1;
+    }
+    if(g->tabTuiles[dx][dy-1] != NULL && g->tabTuiles[dx][dy-1]->est == t->ouest){
+        return 1;
+    }
+    if(g->tabTuiles[dx][dy+1] != NULL && g->tabTuiles[dx][dy+1]->ouest == t->est){
+        return 1;
+    }
+    return 0;
 }
 //--------------------------
 posValid* empilerPosValid(posValid* tete,int l,int c){
@@ -28,11 +46,11 @@ void libererPosValid(posValid* tete){
     }
 }
 //--------------------------
-posValid* positionsValid(grille *g){
+posValid* positionsValid(grille *g,tuile* t){
     posValid* tete = NULL;
-    for(int i=0;i<MAX;i++){
-        for(int j=0;j<MAX;j++){
-            if(isPositionTuileValide(g,g->tabTuiles[i][j],i,j) == 1){
+    for(int i=1;i<MAX-1;i++){
+        for(int j=1;j<MAX-1;j++){
+            if(isPositionTuileValide(g,t,i,j) == 1){
                 tete = empilerPosValid(tete,i,j);
             }
         }

@@ -10,6 +10,6 @@ typedef struct posValid{
 int isPositionTuileValide(grille*,tuile*,int,int);
 posValid* empilerPosValid(posValid*,int,int);
 void libererPosValid(posValid*);
-posValid* positionsValid(grille*);
+posValid* positionsValid(grille*,tuile*);
 //---------------------
 #endif 

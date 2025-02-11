@@ -1,6 +1,6 @@
 #ifndef _TUILE_H
 #define _TUILE_H
-#define MAX 144
+#define MAX 148
 #define NB_TUILES 72
 #include "meeple.h"
 //----------------------------
