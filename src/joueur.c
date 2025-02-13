@@ -1,4 +1,5 @@
 #include "../include/joueur.h"
+#include "../include/tuile.h"
 #include <stdlib.h>
 //----------------------------
 joueur* creerJoueur(int idf,couleurs c){
@@ -21,7 +22,7 @@ void creerJoueurs(tabJoueurs *js,int n){
     }
 }
 //----------------------------
-void poserMeeple(tabJoueurs *tab,int idf,positions p){
+void poserMeeple(grille g,tabJoueurs *tab,int idf,positions p,int dx,int dy){
     int i = 0;
     while(i<tab->nbJoueurs && tab->player[i]->id != idf){
         i++;
@@ -37,5 +38,8 @@ void poserMeeple(tabJoueurs *tab,int idf,positions p){
         return;
     }
     tmp->m->tuilePosition = p;
+    tmp->m->x = dx;
+    tmp->m->y = dy;
+    g.tabTuiles[dx][dy]->meeples = tmp->m;
 }
 //----------------------------

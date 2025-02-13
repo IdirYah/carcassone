@@ -7,6 +7,7 @@ typedef struct posValid{
     struct posValid *suivant;
 }posValid;
 //---------------------
+int comparerTuiles(tuileTypes,tuileTypes);
 int isPositionTuileValide(grille*,tuile*,int,int);
 posValid* empilerPosValid(posValid*,int,int);
 void libererPosValid(posValid*);
