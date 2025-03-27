@@ -1,6 +1,7 @@
 #ifndef _CONTROLLEUR_H
 #define _CONTROLLEUR_H
 #include "../include/tuile.h"
+#include "../include/meeple.h"
 //---------------------
 typedef struct posValid{
     int ligne,colonne;
@@ -12,5 +13,9 @@ int isPositionTuileValide(grille*,tuile*,int,int);
 posValid* empilerPosValid(posValid*,int,int);
 void libererPosValid(posValid*);
 posValid* positionsValid(grille*,tuile*);
+int isPositionMeepleValid(grille*,meeple*);
+int isVisited(int,int,posValid*);
+int meepleRouteController(grille*,int,int,posValid*);
+int isMeepleInRoute(meeple*, tuile*);
 //---------------------
 #endif 
