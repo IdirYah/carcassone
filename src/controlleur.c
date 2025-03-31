@@ -113,7 +113,7 @@ int meepleRouteController(grille* g,int x,int y,posValid* tete){
     if (t == NULL){
         return 1;  
     }
-    if(t->meeples != NULL){
+    if(t->meeples != NULL && !isMeepleInRoute(t->meeples, t)){
         return 0;
     }
     tete = empilerPosValid(tete, x, y);
@@ -130,7 +130,7 @@ int meepleRouteController(grille* g,int x,int y,posValid* tete){
         if (t->ouest == ROUTE && meepleRouteController(g, x, y - 1, tete) == 0) {
             return 0;
         }
-    }else{
+    }/*else{
         if (t->nord == ROUTE) {
             tuile *tNord = g->tabTuiles[x - 1][y];
             if (tNord != NULL && tNord->sud == ROUTE && meepleRouteController(g, x - 1, y, tete) == 0) {
@@ -156,5 +156,6 @@ int meepleRouteController(grille* g,int x,int y,posValid* tete){
             }
         }
     }
+    */
     return 1;  
 }
