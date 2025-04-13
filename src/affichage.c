@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "../include/affichage.h"
 #include "../include/meeple.h"
+#include "../include/joueur.h"
 //----------------
 int colorToInt(couleurs c){
     if(c == BLEU) return 44;
@@ -12,22 +13,16 @@ int colorToInt(couleurs c){
 }
 //----------------
 char tuilePosToChar(tuileTypes t){
-    if(t == VILLAGE){
-        return 'O';
-    }
-    if(t == ROUTE){
-        return 'R';
-    }
-    if(t == PRE){
-        return 'P';
-    }
-    if(t == VILLE){
-        return 'V';
-    }
-    if(t == BLASON){
-        return 'B';
-    }
+    if(t == VILLAGE) return 'O';
+    if(t == ROUTE) return 'R';
+    if(t == PRE) return 'P';
+    if(t == VILLE) return 'V';
+    if(t == BLASON) return 'B';
     return 'A';
+}
+//---------------------
+void symbolDesignation(){
+    printf("O : VILLAGE | R : ROUTE | P : PRE | V : VILLE | B : BLASON\n");
 }
 //---------------------
 void afficherTuile(tuile* t){
@@ -61,5 +56,13 @@ void afficherTuile(tuile* t){
         }else{
             printf("  %c\n",tuilePosToChar(t->sud));
         }
+    }
+}
+//---------------------
+void afficherScore(tabJoueurs* t){
+    printf("ID\tScore\n");
+    printf("-----------------\n");
+    for(int i=0;i<t->nbJoueurs;i++){
+        printf("%d\t%d\n",t->player[i]->id,t->player[i]->score);
     }
 }

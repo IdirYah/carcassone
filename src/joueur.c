@@ -16,9 +16,9 @@ joueur* creerJoueur(int idf,couleurs c){
 //----------------------------
 void creerJoueurs(tabJoueurs *js,int n){
     js->nbJoueurs = n;
-    js->player = (joueur**)malloc(sizeof(joueur*));
+    js->player = (joueur**)malloc(n*sizeof(joueur*));
     for(int i=0;i<n;i++){
-        js->player[i] = creerJoueur(i,i);
+        js->player[i] = creerJoueur(i+1,i);
     }
 }
 //----------------------------

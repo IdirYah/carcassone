@@ -155,7 +155,7 @@ int isVilleOccupeeRec(grille* g,int x,int y,positions pos,posValid** visites) {
 int meepleController(grille* g,int x,int y,positions direction){
     tuile *t = g->tabTuiles[x][y];
     posValid* tete = NULL;
-    int valid = 0;
+    int valid = 1;
     switch(direction){
     case NORD:
         if(t->nord == ABBAYE){valid = 0;}
