@@ -15,11 +15,9 @@ posValid* depilerPosValid(posValid*);
 void libererPosValid(posValid*);
 posValid* positionsValid(grille*,tuile*);
 int isPositionMeepleValid(grille*,meeple*);
-int isMeepleInRoute(meeple*,tuile*);
-int isMeepleInVille(meeple*,tuile*);
 int isVisited(int,int,posValid*);
-int meepleRouteController(grille*,int,int,posValid*,positions);
-int meepleVilleController(grille*,int,int,posValid*,positions);
+int isRouteOccupeeRec(grille*,int,int,positions,posValid**);
+int isVilleOccupeeRec(grille*,int,int,positions,posValid**);
 int meepleController(grille*,int,int,positions);
 //---------------------
 #endif 

@@ -85,22 +85,6 @@ posValid* positionsValid(grille *g,tuile* t){
     return tete;
 }
 //---------------------------
-int isMeepleInRoute(meeple* m, tuile* t){
-    if(m->tuilePosition == NORD) return t->nord != ROUTE;
-    if(m->tuilePosition == SUD) return t->sud != ROUTE;
-    if(m->tuilePosition == EST) return t->est != ROUTE;
-    if(m->tuilePosition == OUEST) return t->ouest != ROUTE;
-    return t->centre != ROUTE; 
-}
-//---------------------------
-int isMeepleInVille(meeple* m, tuile* t){
-    if(m->tuilePosition == NORD) return !comparerTuiles(t->nord,VILLE);
-    if(m->tuilePosition == SUD) return !comparerTuiles(t->sud,VILLE);
-    if(m->tuilePosition == EST) return !comparerTuiles(t->est,VILLE);
-    if(m->tuilePosition == OUEST) return !comparerTuiles(t->ouest,VILLE);
-    return !comparerTuiles(t->centre,VILLE); 
-}
-//---------------------------
 int isVisited(int x,int y,posValid* tete){
     posValid* p = tete;
     while(p != NULL){
@@ -112,69 +96,95 @@ int isVisited(int x,int y,posValid* tete){
     return 0;
 }
 //---------------------------
-int meepleRouteController(grille* g,int x,int y,posValid* tete,positions direction){
-    
+int isRouteOccupeeRec(grille* g,int x,int y,positions pos,posValid** visites) {
+    if(isVisited(x,y,*visites)) return 0;
+    *visites = empilerPosValid(*visites,x,y);
+    tuile* t = g->tabTuiles[x][y];
+    if(!t) return 0;
+    if(t->meeples && t->meeples->tuilePosition == pos) return 1;
+    if(pos == NORD && t->nord == ROUTE){
+        if(isRouteOccupeeRec(g,x-1,y,SUD,visites)) return 1;
+    }
+    if(pos == SUD && t->sud == ROUTE){
+        if(isRouteOccupeeRec(g,x+1,y,NORD,visites)) return 1;
+    }
+    if(pos == EST && t->est == ROUTE){
+        if(isRouteOccupeeRec(g,x,y+1,OUEST,visites)) return 1;
+    }
+    if(pos == OUEST && t->ouest == ROUTE){
+        if(isRouteOccupeeRec(g,x,y-1,EST,visites)) return 1;
+    }
+    if(pos == CENTRE && t->centre == ROUTE){
+        if(t->meeples && t->meeples->tuilePosition == CENTRE) return 1;
+        if(t->nord == ROUTE && isRouteOccupeeRec(g,x-1,y,SUD,visites)) return 1;
+        if(t->sud == ROUTE && isRouteOccupeeRec(g,x+1,y,NORD,visites)) return 1;
+        if(t->est == ROUTE && isRouteOccupeeRec(g,x,y+1,OUEST,visites)) return 1;
+        if(t->ouest == ROUTE && isRouteOccupeeRec(g,x,y-1,EST,visites)) return 1;
+    }
+    return 0;
 }
-//--------------------------
-int meepleVilleController(grille* g,int x,int y,posValid* tete,positions direction){
-    if(isVisited(x,y,tete)){
-        return 1;
+//---------------------------
+int isVilleOccupeeRec(grille* g,int x,int y,positions pos,posValid** visites) {
+    if(isVisited(x,y,*visites)) return 0;
+    *visites = empilerPosValid(*visites,x,y);
+    tuile* t = g->tabTuiles[x][y];
+    if(!t) return 0;
+    if(t->meeples && t->meeples->tuilePosition == pos) return 1;
+    if(pos == NORD && comparerTuiles(VILLE,t->nord) == 1){
+        if(isVilleOccupeeRec(g,x-1,y,SUD,visites)) return 1;
     }
-    tuile *t = g->tabTuiles[x][y];
-    if(t == NULL){
-        return 1;  
+    if(pos == SUD && comparerTuiles(VILLE,t->sud) == 1){
+        if(isVilleOccupeeRec(g,x+1,y,NORD,visites)) return 1;
     }
-    if(t->meeples != NULL && isMeepleInVille(t->meeples,t) == 0){
-        return 0;
+    if(pos == EST && comparerTuiles(VILLE,t->est) == 1){
+        if(isVilleOccupeeRec(g,x,y+1,OUEST,visites)) return 1;
     }
-    tete = empilerPosValid(tete,x,y);
-    if (direction != SUD && t->nord == ROUTE && meepleVilleController(g, x - 1, y, tete, NORD) == 0) {
-        return 0;
+    if(pos == OUEST && comparerTuiles(VILLE,t->ouest) == 1){
+        if(isVilleOccupeeRec(g,x,y-1,EST,visites)) return 1;
     }
-    if (direction != NORD && t->sud == ROUTE && meepleVilleController(g, x + 1, y, tete, SUD) == 0) {
-        return 0;
+    if(pos == CENTRE && comparerTuiles(VILLE,t->centre) == 1){
+        if(t->meeples && t->meeples->tuilePosition == CENTRE) return 1;
+        if(comparerTuiles(VILLE,t->nord) == 1 && isVilleOccupeeRec(g,x-1,y,SUD,visites)) return 1;
+        if(comparerTuiles(VILLE,t->sud) == 1 && isVilleOccupeeRec(g,x+1,y,NORD,visites)) return 1;
+        if(comparerTuiles(VILLE,t->est) == 1 && isVilleOccupeeRec(g,x,y+1,OUEST,visites)) return 1;
+        if(comparerTuiles(VILLE,t->ouest) == 1 && isVilleOccupeeRec(g,x,y-1,EST,visites)) return 1;
     }
-    if (direction != OUEST && t->est == ROUTE && meepleVilleController(g, x, y + 1, tete, EST) == 0) {
-        return 0;
-    }
-    if (direction != EST && t->ouest == ROUTE && meepleVilleController(g, x, y - 1, tete, OUEST) == 0) {
-        return 0;
-    }
-    return 1;  
+    return 0;
 }
-//---------------------
+//---------------------------
 int meepleController(grille* g,int x,int y,positions direction){
     tuile *t = g->tabTuiles[x][y];
     posValid* tete = NULL;
     int valid = 0;
     switch(direction){
     case NORD:
-        if(t->nord == ABBAYE){valid = 1;}
-        //else if(t->nord == ROUTE){valid = meepleRouteController(g,x,y,tete,direction);}
-        else if(t->nord == VILLE || t->nord == BLASON){valid = meepleVilleController(g,x,y,tete,direction);}
+        if(t->nord == ABBAYE){valid = 0;}
+        else if(t->nord == ROUTE){valid = isRouteOccupeeRec(g,x,y,direction,&tete);}
+        else if(t->nord == VILLE || t->nord == BLASON){valid = isVilleOccupeeRec(g,x,y,direction,&tete);}
         break;
     case SUD:
-        if(t->sud == ABBAYE){valid = 1;}
-        //else if(t->sud == ROUTE){valid = meepleRouteController(g,x,y,tete,direction);}
-        else if(t->sud == VILLE ||t->sud == BLASON){valid = meepleVilleController(g,x,y,tete,direction);}
+        if(t->sud == ABBAYE){valid = 0;}
+        else if(t->sud == ROUTE){valid = isRouteOccupeeRec(g,x,y,direction,&tete);}
+        else if(t->sud == VILLE ||t->sud == BLASON){valid = isVilleOccupeeRec(g,x,y,direction,&tete);}
         break;
     case EST:
-        if(t->est == ABBAYE){valid = 1;}
-        //else if(t->est == ROUTE){valid = meepleRouteController(g,x,y,tete,direction);}
-        else if(t->est == VILLE ||t->est == BLASON){valid = meepleVilleController(g,x,y,tete,direction);}
+        if(t->est == ABBAYE){valid = 0;}
+        else if(t->est == ROUTE){valid = isRouteOccupeeRec(g,x,y,direction,&tete);}
+        else if(t->est == VILLE ||t->est == BLASON){valid = isVilleOccupeeRec(g,x,y,direction,&tete);}
         break;
     case OUEST:
-        if(t->ouest == ABBAYE){valid = 1;}
-        //else if(t->ouest == ROUTE){valid = meepleRouteController(g,x,y,tete,direction);}
-        else if(t->ouest == VILLE ||t->ouest == BLASON){valid = meepleVilleController(g,x,y,tete,direction);}
+        if(t->ouest == ABBAYE){valid = 0;}
+        else if(t->ouest == ROUTE){valid = isRouteOccupeeRec(g,x,y,direction,&tete);}
+        else if(t->ouest == VILLE ||t->ouest == BLASON){valid = isVilleOccupeeRec(g,x,y,direction,&tete);}
         break;
     case CENTRE:
-        if(t->centre == ABBAYE){valid = 1;}
-        //else if(t->centre == ROUTE){valid = meepleRouteController(g,x,y,tete,direction);}
-        else if(t->centre == VILLE ||t->centre == BLASON){valid = meepleVilleController(g,x,y,tete,direction);}
+        if(t->centre == ABBAYE){valid = 0;}
+        else if(t->centre == ROUTE){valid = isRouteOccupeeRec(g,x,y,direction,&tete);}
+        else if(t->centre == VILLE ||t->centre == BLASON){valid = isVilleOccupeeRec(g,x,y,direction,&tete);}
         break;
     default:
         break;
     }
-    return valid;
+    if(valid == 1) return 0;
+    return 1;
 }
