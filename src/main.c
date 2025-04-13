@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "../include/controlleur.h"
 #include "../include/tuile.h"
 #include "../include/meeple.h"
+#include "../include/affichage.h"
 
 int main(){
     grille g;
@@ -11,12 +11,11 @@ int main(){
     g.tabTuiles[72][73] = creerTuile(VILLAGE,VILLAGE,VILLAGE,BLASON,VILLE);
     g.tabTuiles[73][72] = creerTuile(VILLE,VILLE,VILLAGE,VILLAGE,VILLAGE);
     g.tabTuiles[73][73] = creerTuile(BLASON,VILLAGE,VILLE,VILLAGE,BLASON);
-    meeple *m = creerMeeple(BLEU);
-    m->tuilePosition = NORD;
+    meeple *m = creerMeeple(VERT);
+    m->tuilePosition = CENTRE;
     m->x = 73;
     m->y = 72;
     g.tabTuiles[m->x][m->y]->meeples = m;
-    int i = meepleController(&g,72,72,CENTRE);
-    printf("%d\n",i);
+    afficherTuile(g.tabTuiles[73][72]);
     return 0;
 }

@@ -1,5 +1,15 @@
 #include <stdio.h>
 #include "../include/affichage.h"
+#include "../include/meeple.h"
+//----------------
+int colorToInt(couleurs c){
+    if(c == BLEU) return 44;
+    if(c == ROUGE) return 41;
+    if(c == VERT) return 42;
+    if(c == JAUNE) return 43;
+    if(c == NOIR) return 40;
+    return 0;
+}
 //----------------
 char tuilePosToChar(tuileTypes t){
     if(t == VILLAGE){
@@ -21,7 +31,35 @@ char tuilePosToChar(tuileTypes t){
 }
 //---------------------
 void afficherTuile(tuile* t){
-    printf("  %c\n",tuilePosToChar(t->nord));
-    printf("%c %c %c\n",tuilePosToChar(t->ouest),tuilePosToChar(t->centre),tuilePosToChar(t->est));
-    printf("  %c\n",tuilePosToChar(t->sud)); 
+    if(t->meeples == NULL){
+        printf("  %c\n",tuilePosToChar(t->nord));
+        printf("%c %c %c\n",tuilePosToChar(t->ouest),tuilePosToChar(t->centre),tuilePosToChar(t->est));
+        printf("  %c\n",tuilePosToChar(t->sud)); 
+    }else{
+        if(t->meeples->tuilePosition == NORD){
+            printf("  \033[%dm%c\033[0m\n",colorToInt(t->meeples->couleur),tuilePosToChar(t->nord));
+        }else{
+            printf("  %c\n",tuilePosToChar(t->nord));
+        }
+        if(t->meeples->tuilePosition == OUEST){
+            printf("\033[%dm%c\033[0m",colorToInt(t->meeples->couleur),tuilePosToChar(t->ouest));
+        }else{
+            printf("%c",tuilePosToChar(t->nord));
+        }
+        if(t->meeples->tuilePosition == CENTRE){
+            printf(" \033[%dm%c\033[0m",colorToInt(t->meeples->couleur),tuilePosToChar(t->centre));
+        }else{
+            printf(" %c",tuilePosToChar(t->centre));
+        }
+        if(t->meeples->tuilePosition == EST){
+            printf(" \033[%dm%c\033[0m\n",colorToInt(t->meeples->couleur),tuilePosToChar(t->est));
+        }else{
+            printf(" %c\n",tuilePosToChar(t->est));
+        }
+        if(t->meeples->tuilePosition == SUD){
+            printf("  \033[%dm%c\033[0m\n",colorToInt(t->meeples->couleur),tuilePosToChar(t->sud));
+        }else{
+            printf("  %c\n",tuilePosToChar(t->sud));
+        }
+    }
 }
