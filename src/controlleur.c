@@ -88,6 +88,13 @@ int isVisited(int x,int y,posValid* tete){
     return 0;
 }
 //---------------------------
+int isMeepleInRoute(meeple* m, tuile* t){
+    if(m->tuilePosition == NORD) return t->nord == ROUTE;
+    if(m->tuilePosition == SUD) return t->sud == ROUTE;
+    if(m->tuilePosition == EST) return t->est == ROUTE;
+    if(m->tuilePosition == OUEST) return t->ouest == ROUTE;
+    return t->centre == ROUTE; 
+}
 //Controller si on peut poser un meeple sur une route (parcours de route)
 int meepleRouteController(grille* g,int x,int y,posValid* tete,positions direction){
     if(isVisited(x,y,tete)){
@@ -97,7 +104,7 @@ int meepleRouteController(grille* g,int x,int y,posValid* tete,positions directi
     if(t == NULL){
         return 1;  
     }
-    if(t->meeples != NULL && isMeepleInRoute(t->meeples,t) == 0){
+    if(t->meeples != NULL && isMeepleInRoute(t->meeples,t) ){
         return 0;
     }
     tete = empilerPosValid(tete,x,y);
@@ -116,65 +123,68 @@ int meepleRouteController(grille* g,int x,int y,posValid* tete,positions directi
     return 1;  
 }
 //--------------------------
-int meepleVilleController(grille* g,int x,int y,posValid* tete,positions direction){
-    if(isVisited(x,y,tete)){
-        return 1;
+int compterRoute(grille* g,int x,int y,positions pos,posValid** visites){
+    if(isVisited(x,y,*visites)) return 0;
+    tuile* t = g->tabTuiles[x][y];
+    if(!t)return 0;
+    *visites = empilerPosValid(*visites,x,y);
+    int score = 1;
+    if(t->nord == ROUTE){
+        tuile* voisine = g->tabTuiles[x-1][y];
+        if(voisine && voisine->sud == ROUTE) score = score + compterRoute(g,x-1,y,SUD,visites);
     }
-    tuile *t = g->tabTuiles[x][y];
-    if(t == NULL){
-        return 1;  
+    if(t->sud == ROUTE){
+        tuile* voisine = g->tabTuiles[x+1][y];
+        if(voisine && voisine->nord == ROUTE) score = score + compterRoute(g,x+1,y,NORD,visites);
     }
-    if(t->meeples != NULL && isMeepleInVille(t->meeples,t) == 0){
-        return 0;
+    if(t->est == ROUTE){
+        tuile* voisine = g->tabTuiles[x][y+1];
+        if(voisine && voisine->ouest == ROUTE) score = score + compterRoute(g,x,y+1,OUEST,visites);
     }
-    tete = empilerPosValid(tete,x,y);
-    if (direction != SUD && t->nord == ROUTE && meepleVilleController(g, x - 1, y, tete, NORD) == 0) {
-        return 0;
+    if(t->ouest == ROUTE){
+        tuile* voisine = g->tabTuiles[x][y-1];
+        if(voisine && voisine->est == ROUTE) score = score + compterRoute(g,x,y-1,EST,visites);
     }
-    if (direction != NORD && t->sud == ROUTE && meepleVilleController(g, x + 1, y, tete, SUD) == 0) {
-        return 0;
-    }
-    if (direction != OUEST && t->est == ROUTE && meepleVilleController(g, x, y + 1, tete, EST) == 0) {
-        return 0;
-    }
-    if (direction != EST && t->ouest == ROUTE && meepleVilleController(g, x, y - 1, tete, OUEST) == 0) {
-        return 0;
-    }
-    return 1;  
+    return score;
 }
-//---------------------
-int meepleController(grille* g,int x,int y,positions direction){
-    tuile *t = g->tabTuiles[x][y];
-    posValid* tete = NULL;
-    int valid = 0;
-    switch(direction){
-    case NORD:
-        if(t->nord == ABBAYE){valid = 1;}
-        else if(t->nord == ROUTE){valid = meepleRouteController(g,x,y,tete,direction);}
-        else if(t->nord == VILLE || t->nord == BLASON){valid = meepleVilleController(g,x,y,tete,direction);}
-        break;
-    case SUD:
-        if(t->sud == ABBAYE){valid = 1;}
-        else if(t->sud == ROUTE){valid = meepleRouteController(g,x,y,tete,direction);}
-        else if(t->sud == VILLE ||t->sud == BLASON){valid = meepleVilleController(g,x,y,tete,direction);}
-        break;
-    case EST:
-        if(t->est == ABBAYE){valid = 1;}
-        else if(t->est == ROUTE){valid = meepleRouteController(g,x,y,tete,direction);}
-        else if(t->est == VILLE ||t->est == BLASON){valid = meepleVilleController(g,x,y,tete,direction);}
-        break;
-    case OUEST:
-        if(t->ouest == ABBAYE){valid = 1;}
-        else if(t->ouest == ROUTE){valid = meepleRouteController(g,x,y,tete,direction);}
-        else if(t->ouest == VILLE ||t->ouest == BLASON){valid = meepleVilleController(g,x,y,tete,direction);}
-        break;
-    case CENTRE:
-        if(t->centre == ABBAYE){valid = 1;}
-        else if(t->centre == ROUTE){valid = meepleRouteController(g,x,y,tete,direction);}
-        else if(t->centre == VILLE ||t->centre == BLASON){valid = meepleVilleController(g,x,y,tete,direction);}
-        break;
-    default:
-        break;
+//-----------------------------
+int contientBlason(tuile* t){
+    return (t->centre == BLASON || t->est == BLASON || t->nord == BLASON || t->ouest == BLASON || t->sud == BLASON);
+}
+//-----------------------------
+int compterVille(grille* g,int x,int y,positions pos,posValid** visites){
+    if(isVisited(x,y,*visites)) return 0;
+    tuile* t = g->tabTuiles[x][y];
+    if(!t)return 0;
+    *visites = empilerPosValid(*visites,x,y);
+    int score = 1;
+    if(contientBlason(t)) score = 2;
+    if(comparerTuiles(VILLE,t->nord)){
+        tuile* voisine = g->tabTuiles[x-1][y];
+        if(voisine && comparerTuiles(VILLE,voisine->sud)) score = score + compterVille(g,x-1,y,SUD,visites);
     }
-    return valid;
+    if(comparerTuiles(VILLE,t->sud)){
+        tuile* voisine = g->tabTuiles[x+1][y];
+        if(voisine && comparerTuiles(VILLE,voisine->nord)) score = score + compterVille(g,x+1,y,NORD,visites);
+    }
+    if(comparerTuiles(VILLE,t->est)){
+        tuile* voisine = g->tabTuiles[x][y+1];
+        if(voisine && comparerTuiles(VILLE,voisine->ouest)) score = score + compterVille(g,x,y+1,OUEST,visites);
+    }
+    if(comparerTuiles(VILLE,t->ouest)){
+        tuile* voisine = g->tabTuiles[x][y-1];
+        if(voisine && comparerTuiles(VILLE,voisine->est)) score = score + compterVille(g,x,y-1,EST,visites);
+    }
+    return score;
+}
+//-------------------
+int compterAbbaye(grille* g,int x,int y){
+    int score = 0;
+    if(g->tabTuiles[x][y] == NULL) return score;
+    for(int i=-1;i<=1;i++){
+        for(int j=-1;j<=1;j++){
+            if(g->tabTuiles[x+i][y+j] != NULL) score++;
+        }
+    }
+    return score;
 }

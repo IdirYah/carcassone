@@ -15,8 +15,7 @@ void libererPosValid(posValid*);
 posValid* positionsValid(grille*,tuile*);
 int isPositionMeepleValid(grille*,meeple*);
 int isVisited(int,int,posValid*);
+int isMeepleInRoute(meeple* , tuile* );
 int meepleRouteController(grille*,int,int,posValid*,positions);
-int meepleVilleController(grille*,int,int,posValid*,positions);
-int meepleController(grille*,int,int,positions);
 //---------------------
 #endif 
