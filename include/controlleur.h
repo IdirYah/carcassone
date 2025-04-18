@@ -15,8 +15,6 @@ void libererPosValid(posValid*);
 posValid* positionsValid(grille*,tuile*);
 int isPositionMeepleValid(grille*,meeple*);
 int isVisited(int,int,posValid*);
-int isMeepleInRoute(meeple* , tuile* );
-int meepleRouteController(grille*,int,int,posValid*,positions);
 int compterRoute(grille*,int,int,positions,posValid**);
 int contientBlason(tuile*);
 int compterVille(grille*,int,int,positions,posValid**);

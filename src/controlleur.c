@@ -87,41 +87,6 @@ int isVisited(int x,int y,posValid* tete){
     }
     return 0;
 }
-//---------------------------
-int isMeepleInRoute(meeple* m, tuile* t){
-    if(m->tuilePosition == NORD) return t->nord == ROUTE;
-    if(m->tuilePosition == SUD) return t->sud == ROUTE;
-    if(m->tuilePosition == EST) return t->est == ROUTE;
-    if(m->tuilePosition == OUEST) return t->ouest == ROUTE;
-    return t->centre == ROUTE; 
-}
-//Controller si on peut poser un meeple sur une route (parcours de route)
-int meepleRouteController(grille* g,int x,int y,posValid* tete,positions direction){
-    if(isVisited(x,y,tete)){
-        return 1;
-    }
-    tuile *t = g->tabTuiles[x][y];
-    if(t == NULL){
-        return 1;  
-    }
-    if(t->meeples != NULL && isMeepleInRoute(t->meeples,t) ){
-        return 0;
-    }
-    tete = empilerPosValid(tete,x,y);
-    if (direction != SUD && t->nord == ROUTE && meepleRouteController(g, x - 1, y, tete, NORD) == 0) {
-        return 0;
-    }
-    if (direction != NORD && t->sud == ROUTE && meepleRouteController(g, x + 1, y, tete, SUD) == 0) {
-        return 0;
-    }
-    if (direction != OUEST && t->est == ROUTE && meepleRouteController(g, x, y + 1, tete, EST) == 0) {
-        return 0;
-    }
-    if (direction != EST && t->ouest == ROUTE && meepleRouteController(g, x, y - 1, tete, OUEST) == 0) {
-        return 0;
-    }
-    return 1;  
-}
 //--------------------------
 int compterRoute(grille* g,int x,int y,positions pos,posValid** visites){
     if(isVisited(x,y,*visites)) return 0;
