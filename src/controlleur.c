@@ -367,6 +367,7 @@ int calculScore(grille* g,int finished,meeple* m){
         visites = NULL;
         if(isComplete || finished){
             score = compterVille(g,m->x,m->y,m->tuilePosition,&visites);
+            if(isComplete && !finished) score = score*2;
         }
     }
     return score;
