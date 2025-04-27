@@ -7,7 +7,10 @@
 int colorToInt(couleurs);
 char tuilePosToChar(tuileTypes);
 void symbolDesignation();
-void afficherTuile(tuile*);
+void afficherTuileNord(tuile*);
+void afficherTuileSud(tuile*);
+void afficherTuileReste(tuile*);
 void afficherScore(tabJoueurs*);
+void afficherGrille(grille*);
 //--------------------
 #endif 
