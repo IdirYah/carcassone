@@ -45,7 +45,7 @@ void afficherTuileReste(tuile* t){
     if(t->meeples != NULL && t->meeples->tuilePosition == OUEST){
         printf("|\033[%dm%c\033[0m",colorToInt(t->meeples->couleur),tuilePosToChar(t->ouest));
     }else{
-        printf("|%c",tuilePosToChar(t->nord));
+        printf("|%c",tuilePosToChar(t->ouest));
     }
     if(t->meeples != NULL && t->meeples->tuilePosition == CENTRE){
         printf(" \033[%dm%c\033[0m",colorToInt(t->meeples->couleur),tuilePosToChar(t->centre));

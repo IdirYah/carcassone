@@ -43,3 +43,22 @@ void poserMeeple(grille g,tabJoueurs *tab,int idf,positions p,int dx,int dy){
     g.tabTuiles[dx][dy]->meeples = tmp->m;
 }
 //----------------------------
+void rendreMeeple(tabJoueurs *tab,int idf,meeple* mp){
+    int i = 0;
+    while(i<tab->nbJoueurs && tab->player[i]->id != idf){
+        i++;
+    }
+    if(i>=tab->nbJoueurs){
+        return;
+    }
+    listMeeples *tmp = tab->player[i]->teteListe;
+    while(tmp != NULL && tmp->m->x != mp->x && tmp->m->y != mp->y){
+        tmp = tmp->suivant;
+    }
+    if(tmp == NULL){
+        return;
+    }
+    tmp->m->tuilePosition = RIEN;
+    tmp->m->x = -1;
+    tmp->m->y = -1;
+}

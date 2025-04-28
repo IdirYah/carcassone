@@ -17,5 +17,6 @@ typedef struct tabJoueurs{
 joueur *creerJoueur(int,couleurs);
 void creerJoueurs(tabJoueurs*,int);
 void poserMeeple(grille,tabJoueurs*,int,positions,int,int);
+void rendreMeeple(tabJoueurs*,int,meeple*);
 //-------------------------
 #endif 
