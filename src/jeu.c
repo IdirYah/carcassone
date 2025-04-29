@@ -38,9 +38,9 @@ void deroulementJeu(grille* g,tabJoueurs* j,pileTuiles* p,int n){
     while(!finished){
         t = depilerTuile(p);
         if(pileVide(*p) == 1) finished = 1;
-        printf("C'est au tour du joueur numéro %d.\n",i%n+1);
         int stop = 0;
         while(!stop){
+            printf("C'est au tour du joueur numéro %d.\n",(i%n)+1);
             afficherScore(j);
             printf("\n");
             symbolDesignation();
@@ -53,6 +53,7 @@ void deroulementJeu(grille* g,tabJoueurs* j,pileTuiles* p,int n){
             afficherTuileSud(t);
             printf("\n");
             printf("\n");
+            printf("Grille:\n");
             afficherGrille(g);
             printf("\n");
             posValid* tete = positionsValid(g,t);
@@ -76,37 +77,84 @@ void deroulementJeu(grille* g,tabJoueurs* j,pileTuiles* p,int n){
             scanf("%d",&choix);
             switch(choix){
                 case 1:
-                    if(tete == NULL){
-                        printf("Aucune position valide pour placer la tuile.\n");
-                        stop = 1;
-                    }else{
-                        int x,y;
-                        printf("Veuillez entrer la position (x,y) pour placer la tuile: ");
-                        scanf("%d %d",&x,&y);
-                        if(isPositionTuileValide(g,t,x,y) == 1){
-                            g->tabTuiles[x][y] = t;
-                            stop = 1;
-                            i++;
-                            afficherGrille(g);
-                        }else{
-                            printf("Position invalide. Veuillez reessayer.\n");
+                    int x,y;
+                    printf("Veuillez entrer la position (x,y) pour placer la tuile: ");
+                    scanf("%d %d",&x,&y);
+                    if(isPositionTuileValide(g,t,x,y)){
+                        poserTuile(g,x,y,t);
+                        if(meepleController(g,x,y,NORD) || meepleController(g,x,y,SUD) || meepleController(g,x,y,EST) || meepleController(g,x,y,OUEST) || meepleController(g,x,y,CENTRE)){  
+                            printf("Voulez-vous placer un meeple sur la tuile? (1: Oui, 0: Non): ");
+                            int choixMeeple;
+                            scanf("%d",&choixMeeple);
+                            if(choixMeeple == 1){
+                                int posMeeple;
+                                printf("Veuillez choisir la position du meeple (0: NORD, 1: SUD, 2: EST, 3: OUEST, 4: CENTRE): ");
+                                scanf("%d",&posMeeple);
+                                if(posMeeple == 0){
+                                    if(meepleController(g,x,y,NORD) == 1){
+                                        poserMeeple(g,j,(i%n)+1,NORD,x,y);
+                                        int score = calculScore(g,0,g->tabTuiles[x][y]->meeples);
+                                        j->player[i%n]->score += score;
+                                    }else{
+                                        printf("Impossible de poser le meeple dans cette position.\n");
+                                    }
+                                }else if(posMeeple == 1){
+                                    if(meepleController(g,x,y,SUD) == 1){
+                                        poserMeeple(g,j,(i%n)+1,SUD,x,y);
+                                        int score = calculScore(g,0,g->tabTuiles[x][y]->meeples);
+                                        j->player[i%n]->score += score;
+                                    }else{
+                                        printf("Impossible de poser le meeple dans cette position.\n");
+                                    }
+                                }else if(posMeeple == 2){
+                                    if(meepleController(g,x,y,EST) == 1){
+                                        poserMeeple(g,j,(i%n)+1,EST,x,y);
+                                        int score = calculScore(g,0,g->tabTuiles[x][y]->meeples);
+                                        j->player[i%n]->score += score;
+                                    }else{
+                                        printf("Impossible de poser le meeple dans cette position.\n");
+                                    }
+                                }else if(posMeeple == 3){
+                                    if(meepleController(g,x,y,OUEST) == 1){
+                                        poserMeeple(g,j,(i%n)+1,OUEST,x,y);
+                                        int score = calculScore(g,0,g->tabTuiles[x][y]->meeples);
+                                        j->player[i%n]->score += score;
+                                    }else{
+                                        printf("Impossible de poser le meeple dans cette position.\n");
+                                    }
+                                }else if(posMeeple == 4){
+                                    if(meepleController(g,x,y,CENTRE) == 1){
+                                        poserMeeple(g,j,(i%n)+1,CENTRE,x,y);
+                                        int score = calculScore(g,0,g->tabTuiles[x][y]->meeples);
+                                        j->player[i%n]->score += score;
+                                    }else{
+                                        printf("Impossible de poser le meeple dans cette position.\n");
+                                    }
+                                }else{
+                                    printf("Position invalide.\n");  
+                                }
+                            }
                         }
+                        stop = 1;
+                        i++;
+                    }else{
+                        printf("Positions invalide. Veuillez reessayer.\n");
                     }
-                    system("clear");
+                    system("cls");
                     break;
                 case 2:
                     t1 = rotationTuile(t,90);
                     t = t1;
-                    system("clear");
+                    system("cls");
                     break;
                 case 3:
                     t1 = rotationTuile(t,-90);
                     t = t1;
-                    system("clear");
+                    system("cls");
                     break;
                 default:
                     printf("Choix invalide. Veuillez reessayer.\n");
-                    system("clear");
+                    system("cls");
                     break;  
             }
         }

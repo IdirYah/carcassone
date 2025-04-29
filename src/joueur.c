@@ -22,7 +22,7 @@ void creerJoueurs(tabJoueurs *js,int n){
     }
 }
 //----------------------------
-void poserMeeple(grille g,tabJoueurs *tab,int idf,positions p,int dx,int dy){
+void poserMeeple(grille* g,tabJoueurs *tab,int idf,positions p,int dx,int dy){
     int i = 0;
     while(i<tab->nbJoueurs && tab->player[i]->id != idf){
         i++;
@@ -40,7 +40,7 @@ void poserMeeple(grille g,tabJoueurs *tab,int idf,positions p,int dx,int dy){
     tmp->m->tuilePosition = p;
     tmp->m->x = dx;
     tmp->m->y = dy;
-    g.tabTuiles[dx][dy]->meeples = tmp->m;
+    g->tabTuiles[dx][dy]->meeples = tmp->m;
 }
 //----------------------------
 void rendreMeeple(tabJoueurs *tab,int idf,meeple* mp){
