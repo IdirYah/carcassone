@@ -6,6 +6,7 @@
 #include "../include/affichage.h"
 #include <stdio.h>  
 #include <stdlib.h>
+#include <unistd.h>
 //--------------------
 int initialiserJeu(grille* g,tabJoueurs* j,char *fname,pileTuiles *p){
     printf("Initialisation du jeu...\n");
@@ -82,7 +83,7 @@ void deroulementJeu(grille* g,tabJoueurs* j,pileTuiles* p,int n){
                     scanf("%d %d",&x,&y);
                     if(isPositionTuileValide(g,t,x,y)){
                         poserTuile(g,x,y,t);
-                        if(meepleController(g,x,y,NORD) || meepleController(g,x,y,SUD) || meepleController(g,x,y,EST) || meepleController(g,x,y,OUEST) || meepleController(g,x,y,CENTRE)){  
+                        if(meepleController(g,x,y,NORD) == 1 || meepleController(g,x,y,SUD) == 1 || meepleController(g,x,y,EST) == 1 || meepleController(g,x,y,OUEST) == 1 || meepleController(g,x,y,CENTRE) == 1){  
                             printf("Voulez-vous placer un meeple sur la tuile? (1: Oui, 0: Non): ");
                             int choixMeeple;
                             scanf("%d",&choixMeeple);
@@ -93,40 +94,30 @@ void deroulementJeu(grille* g,tabJoueurs* j,pileTuiles* p,int n){
                                 if(posMeeple == 0){
                                     if(meepleController(g,x,y,NORD) == 1){
                                         poserMeeple(g,j,(i%n)+1,NORD,x,y);
-                                        int score = calculScore(g,0,g->tabTuiles[x][y]->meeples);
-                                        j->player[i%n]->score += score;
                                     }else{
                                         printf("Impossible de poser le meeple dans cette position.\n");
                                     }
                                 }else if(posMeeple == 1){
                                     if(meepleController(g,x,y,SUD) == 1){
                                         poserMeeple(g,j,(i%n)+1,SUD,x,y);
-                                        int score = calculScore(g,0,g->tabTuiles[x][y]->meeples);
-                                        j->player[i%n]->score += score;
                                     }else{
                                         printf("Impossible de poser le meeple dans cette position.\n");
                                     }
                                 }else if(posMeeple == 2){
                                     if(meepleController(g,x,y,EST) == 1){
                                         poserMeeple(g,j,(i%n)+1,EST,x,y);
-                                        int score = calculScore(g,0,g->tabTuiles[x][y]->meeples);
-                                        j->player[i%n]->score += score;
                                     }else{
                                         printf("Impossible de poser le meeple dans cette position.\n");
                                     }
                                 }else if(posMeeple == 3){
                                     if(meepleController(g,x,y,OUEST) == 1){
                                         poserMeeple(g,j,(i%n)+1,OUEST,x,y);
-                                        int score = calculScore(g,0,g->tabTuiles[x][y]->meeples);
-                                        j->player[i%n]->score += score;
                                     }else{
                                         printf("Impossible de poser le meeple dans cette position.\n");
                                     }
                                 }else if(posMeeple == 4){
                                     if(meepleController(g,x,y,CENTRE) == 1){
                                         poserMeeple(g,j,(i%n)+1,CENTRE,x,y);
-                                        int score = calculScore(g,0,g->tabTuiles[x][y]->meeples);
-                                        j->player[i%n]->score += score;
                                     }else{
                                         printf("Impossible de poser le meeple dans cette position.\n");
                                     }
@@ -135,26 +126,45 @@ void deroulementJeu(grille* g,tabJoueurs* j,pileTuiles* p,int n){
                                 }
                             }
                         }
+                        for(int k=0;k<=i%n;k++){
+                            int score = 0;
+                            listMeeples* tete = j->player[k]->teteListe;
+                            listMeeples* tmp = NULL;
+                            while(tete != NULL){
+                                int fin = 0;
+                                score += calculScore(g,0,g->tabTuiles[tete->m->x][tete->m->y]->meeples,&fin);
+                                if(fin == 1){
+                                    rendreMeeple(g,j,k,tete->m);
+                                    if(tmp == NULL){tete = j->player[k]->teteListe;}
+                                    else{tete = tmp->suivant;}
+                                }else{
+                                    tmp = tete;
+                                    tete = tete->suivant;
+                                }
+                            }
+                            j->player[k]->score += score;
+                        }
                         stop = 1;
                         i++;
                     }else{
                         printf("Positions invalide. Veuillez reessayer.\n");
                     }
-                    system("cls");
+                    sleep(1);
+                    system("clear");
                     break;
                 case 2:
                     t1 = rotationTuile(t,90);
                     t = t1;
-                    system("cls");
+                    system("clear");
                     break;
                 case 3:
                     t1 = rotationTuile(t,-90);
                     t = t1;
-                    system("cls");
+                    system("clear");
                     break;
                 default:
                     printf("Choix invalide. Veuillez reessayer.\n");
-                    system("cls");
+                    system("clear");
                     break;  
             }
         }

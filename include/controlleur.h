@@ -26,6 +26,6 @@ int compterAbbaye(grille*,int,int);
 int abbayeFinished(grille*,int,int);
 int routeFinished(grille*,int,int,positions,posValid**);
 int villeFinished(grille*,int,int,positions,posValid**);
-int calculScore(grille*,int,meeple*);
+int calculScore(grille*,int,meeple*,int*);
 //---------------------
 #endif 

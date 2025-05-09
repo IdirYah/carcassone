@@ -68,43 +68,42 @@ void afficherScore(tabJoueurs* t){
 }
 //---------------------
 void afficherGrille(grille* g){
-    for(int i=0;i<MAX;i++){
-        int ligneVide = 1;
+    int iMin = MAX, iMax = 0;
+    int jMin = MAX, jMax = 0;
+    for(int i=0; i<MAX;i++){
         for(int j=0;j<MAX;j++){
             if(g->tabTuiles[i][j] != NULL){
-                ligneVide = 0;
-                break;
+                if (i < iMin) iMin = i;
+                if (i > iMax) iMax = i;
+                if (j < jMin) jMin = j;
+                if (j > jMax) jMax = j;
             }
         }
-        if(ligneVide == 1) continue;
-        for(int j=0;j<MAX;j++){
-            if(g->tabTuiles[i][j] != NULL){
-                printf("+-----+");
-            }
-        }
-        printf("\n");
-        for(int j=0;j<MAX;j++){
-            if(g->tabTuiles[i][j] != NULL){
-                afficherTuileNord(g->tabTuiles[i][j]);
-            }
+    }
+    for (int i = iMin; i <= iMax; i++){
+        for(int j=jMin;j<=jMax;j++) {
+            if(g->tabTuiles[i][j] != NULL) printf("+-----+");
+            else printf("       ");
         }
         printf("\n");
-        for(int j=0;j<MAX;j++){
-            if(g->tabTuiles[i][j] != NULL){
-                afficherTuileReste(g->tabTuiles[i][j]);
-            }
+        for(int j=jMin;j<=jMax;j++){
+            if(g->tabTuiles[i][j] != NULL) afficherTuileNord(g->tabTuiles[i][j]);
+            else printf("       ");
         }
         printf("\n");
-        for(int j=0;j<MAX;j++){
-            if(g->tabTuiles[i][j] != NULL){
-                afficherTuileSud(g->tabTuiles[i][j]);
-            }
+        for(int j=jMin;j<=jMax;j++){
+            if(g->tabTuiles[i][j] != NULL) afficherTuileReste(g->tabTuiles[i][j]);
+            else printf("       ");
         }
         printf("\n");
-        for(int j=0;j<MAX;j++){
-            if(g->tabTuiles[i][j] != NULL){
-                printf("+-----+");
-            }
+        for(int j=jMin;j<=jMax;j++){
+            if(g->tabTuiles[i][j] != NULL) afficherTuileSud(g->tabTuiles[i][j]);
+            else printf("       ");
+        }
+        printf("\n");
+        for(int j=jMin;j<=jMax;j++){
+            if(g->tabTuiles[i][j] != NULL) printf("+-----+");
+            else printf("       ");
         }
         printf("\n");
     }

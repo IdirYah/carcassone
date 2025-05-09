@@ -7,10 +7,6 @@ joueur* creerJoueur(int idf,couleurs c){
     j->id = idf;
     j->score = 0;
     j->teteListe = NULL;
-    for(int i=0;i<7;i++){
-        meeple *m = creerMeeple(c);
-        empilerMeeple(m,j);
-    }
     return j;
 }
 //----------------------------
@@ -22,43 +18,46 @@ void creerJoueurs(tabJoueurs *js,int n){
     }
 }
 //----------------------------
-void poserMeeple(grille* g,tabJoueurs *tab,int idf,positions p,int dx,int dy){
+int longuerList(joueur *j){
     int i = 0;
-    while(i<tab->nbJoueurs && tab->player[i]->id != idf){
+    listMeeples *tmp = j->teteListe;
+    while(tmp != NULL){
         i++;
-    }
-    if(i>=tab->nbJoueurs){
-        return;
-    }
-    listMeeples *tmp = tab->player[i]->teteListe;
-    while(tmp != NULL && tmp->m->tuilePosition != RIEN){
         tmp = tmp->suivant;
     }
-    if(tmp == NULL){
-        return;
-    }
-    tmp->m->tuilePosition = p;
-    tmp->m->x = dx;
-    tmp->m->y = dy;
-    g->tabTuiles[dx][dy]->meeples = tmp->m;
+    return i;
 }
 //----------------------------
-void rendreMeeple(tabJoueurs *tab,int idf,meeple* mp){
-    int i = 0;
-    while(i<tab->nbJoueurs && tab->player[i]->id != idf){
-        i++;
+int poserMeeple(grille* g,tabJoueurs *tab,int idf,positions p,int dx,int dy){
+    if(longuerList(tab->player[idf-1])>=7){
+        return 0;
     }
-    if(i>=tab->nbJoueurs){
-        return;
-    }
-    listMeeples *tmp = tab->player[i]->teteListe;
-    while(tmp != NULL && tmp->m->x != mp->x && tmp->m->y != mp->y){
+    meeple* mp = (meeple*)malloc(sizeof(meeple));
+    mp->x = dx;
+    mp->y = dy;
+    mp->couleur = idf;
+    mp->tuilePosition = p;
+    empilerMeeple(mp,tab->player[idf-1]);
+    g->tabTuiles[dx][dy]->meeples = mp;
+    return 1;
+}
+//----------------------------
+void rendreMeeple(grille* g,tabJoueurs *tab,int idf,meeple* mp){
+    listMeeples* tmp = tab->player[idf]->teteListe;
+    listMeeples* prev = NULL;
+    if(mp == NULL) return;
+    while(tmp != NULL){
+        if(tmp->m->x == mp->x && tmp->m->y == mp->y){
+            if(prev == NULL){
+                tab->player[idf]->teteListe = tmp->suivant;
+            }else{
+                prev->suivant = tmp->suivant;
+            }
+            free(tmp);
+            g->tabTuiles[mp->x][mp->y]->meeples = NULL;
+            return;
+        }
+        prev = tmp;
         tmp = tmp->suivant;
     }
-    if(tmp == NULL){
-        return;
-    }
-    tmp->m->tuilePosition = RIEN;
-    tmp->m->x = -1;
-    tmp->m->y = -1;
 }

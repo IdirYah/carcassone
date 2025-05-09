@@ -50,7 +50,6 @@ void initialiserPile(char *fname,pileTuiles *p){
     int i = 0;
     int j = 0;
     int k = 1;
-    printf("file opened.\n");
     while(fread(&c,sizeof(char),1,f) == 1){
         if(c != '\n' && c != ','){
             chaine[j] = c;
@@ -89,26 +88,27 @@ int pileVide(pileTuiles t){
 //------------------------------------
 tuile *rotationTuile(tuile *t,int angle){
     tuile *tmp = (tuile*)malloc(sizeof(tuile));
+    if(tmp == NULL){;
+        printf("Erreur d'allocation de mémoire\n");
+        return NULL;
+    }
     tmp->centre = t->centre;
     tmp->meeples = t->meeples;
-    if(angle == 90){
-        tmp->nord = t->est;
-        tmp->ouest = t->nord;
-        tmp->sud = t->ouest;
-        tmp->est = t->sud;
-        return tmp;
+    int ancienNord = t->nord;
+    int ancienSud = t->sud;
+    int ancienEst = t->est;
+    int ancienOuest = t->ouest;
+    if(angle == -90){
+        tmp->nord = ancienOuest;
+        tmp->est = ancienNord;
+        tmp->sud = ancienEst;
+        tmp->ouest = ancienSud;
+    }else{
+        tmp->nord = ancienEst;
+        tmp->est = ancienSud;
+        tmp->sud = ancienOuest;
+        tmp->ouest = ancienNord;
     }
-    if(angle == 180){
-        tmp->nord = t->sud;
-        tmp->sud = t->nord;
-        tmp->est = t->ouest;
-        tmp->ouest = t->est;
-        return tmp;
-    }
-    tmp->nord = t->ouest;
-    tmp->sud = t->est;
-    tmp->est = t->sud;
-    tmp->ouest = t->nord;
     return tmp;
 }
 //------------------------------
