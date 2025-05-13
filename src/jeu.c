@@ -75,6 +75,7 @@ void deroulementJeu(grille* g,tabJoueurs* j,pileTuiles* p,int n){
             printf("1. Placer la tuile.\n");
             printf("2. Faire une rotation 90°.\n");
             printf("3. Faire une rotation -90°.\n");
+            printf("4. Quitter la partie.\n");
             printf("Faites votre choix : ");
             scanf("%d",&choix);
             switch(choix){
