@@ -40,5 +40,6 @@ tuile *depilerTuile(pileTuiles*);
 int pileVide(pileTuiles);
 tuile* rotationTuile(tuile*,int);
 void poserTuile(grille*,int,int,tuile*);
+void melangerTuile(pileTuiles*);
 //-----------------------------
 #endif 
